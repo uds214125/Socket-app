@@ -5,11 +5,23 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
+// var index = require('./routes/index');
+import index from './routes/index';
 var users = require('./routes/users');
 
-var app = express();
+var app = express(); 
+// var server = require('./bin/www').server;
+// var server = require('http').createServer(app);
+// import SocketIO from 'socket.io';
+// var s = server.listen(3005);
+// var io = new SocketIO(s);
+// const Server = require('socket.io');
+// const io = new Server();
+var io = require('socket.io').listen(3005);
 
+io.on('connection', () => {
+  console.log('Ok');
+} );
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -21,7 +33,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+// import SocketCtrl from './controllers/socket-init';
+app.use(function(req, res, next){
+  // res.io = io;
+  // io.on('connect', (socket) => {
+  //   // ...
+    // console.log('==============on connect =============== ');
+  // });
+  io.sockets.on('connection',function(client){  
+    console.log('==============Connected=============== ');
+        next();
+  });
+});
 app.use('/', index);
 app.use('/users', users);
 
@@ -44,9 +67,10 @@ app.use(function(err, req, res, next) {
 });
 // var port = process.env.PORT || '3000';
 // app.set('port', port);
-let port=3000;
-app.listen(port,function(){
-  console.log(' server listening -------',port);
-});
+// let port=3000;
+// app.listen(port,function(){
+//   console.log(' server listening -------',port);
+// });
 
-module.exports = app;
+// module.exports = app;
+module.exports = {app: app};

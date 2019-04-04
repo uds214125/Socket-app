@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../app').app;
 var debug = require('debug')('socket-app:server');
 var http = require('http');
 
@@ -24,13 +24,18 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-
+// const Server = require('socket.io')();
+// let io = Server(port);
+// io.close();
+// const io = require('socket.io')(server);
 server.listen(port,function(){
   console.log(' server listening on ',port);
 });
 server.on('error', onError);
 server.on('listening', onListening);
-
+// io.serveClient(false);
+// io.attach(http);
+// socketIO = Server(server);
 /**
  * Normalize a port into a number, string, or false.
  */
@@ -90,3 +95,5 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+// module.exports = server;
